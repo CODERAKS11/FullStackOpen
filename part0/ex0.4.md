@@ -15,7 +15,7 @@ sequenceDiagram
         note over browser: browser starts executing js code that requests JSON data from server
 
         browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
-        server-->browser: [{ content: "whatever, just a simple content", date: "2020-11-30" }, ...]
+        server-->browser: [{ content: "whatever, just a simple content", date: "2025-01-20" }, ...]
 
         note over browser: browser executes the event handler that renders notes to display
 
