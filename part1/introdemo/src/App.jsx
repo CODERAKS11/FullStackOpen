@@ -23,15 +23,18 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState({0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0})
   function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  
+  // setVotes(...votes,votes[{selected}]+=1)
 
   return (
     <div>
     {anecdotes[selected]} <br />
+    <button onClick={() => setVotes({...votes, [selected]: votes[selected] + 1})} >vote</button>
     <button onClick={() => setSelected(getRandomIntInclusive(0,anecdotes.length))}>next anecdote</button><br />
+    
   </div>
   )
 }
