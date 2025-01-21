@@ -27,14 +27,36 @@ const App = () => {
   function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  // setVotes(...votes,votes[{selected}]+=1)
+
+const votesArray = Object.values(votes);
+console.log(votesArray)
+function findIndexOfLargest(votesArray) {
+  let largest = 0;
+  let indexOfLargest = 0;
+  
+  votesArray.forEach((index) => {
+    if (votesArray[index] > largest) {
+      largest = votesArray[index];
+      indexOfLargest = index;
+    }
+  });
+  
+  return indexOfLargest;
+}
+
+
 
   return (
     <div>
+    <h1>Anecdote of the day</h1>
     {anecdotes[selected]} <br />
     <button onClick={() => setVotes({...votes, [selected]: votes[selected] + 1})} >vote</button>
     <button onClick={() => setSelected(getRandomIntInclusive(0,anecdotes.length))}>next anecdote</button><br />
+    <br />
+    <h1>Anecdote with most votes</h1>
     
+    {anecdotes[findIndexOfLargest(votesArray)]} <br/>has {votes[findIndexOfLargest(votesArray)]} votes
+
   </div>
   )
 }
