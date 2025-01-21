@@ -5,6 +5,7 @@ import viteLogo from '/vite.svg'
 import Header  from "./components/Header.jsx"
 import Content from './components/Content.jsx'
 import Total from './components/Total.jsx'
+import Statistics from './components/Statistics.jsx'
 
 
 
@@ -26,16 +27,7 @@ const App = () => {
       <button onClick={() => setBad(bad + 1)}>bad</button>
       <br /><br />
     </div>
-    <div>
-      <h1>statistics</h1>
-      
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>    
-      <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <p>average {(good - bad) / (good + neutral + bad)}</p>
-      <p>positive {(good / (good + neutral + bad)) * 100} %</p>
-    </div>
+    <Statistics good={good} neutral={neutral} bad={bad} />
     
   </> 
   )
