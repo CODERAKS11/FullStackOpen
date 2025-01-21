@@ -6,6 +6,7 @@ import Header  from "./components/Header.jsx"
 import Content from './components/Content.jsx'
 import Total from './components/Total.jsx'
 import Statistics from './components/Statistics.jsx'
+import Button from './components/Button.jsx'
 
 
 
@@ -20,11 +21,14 @@ const App = () => {
       
 
     <div>
-      <h1>give feedback</h1>
+      <h1 className="color-red">give feedback</h1>
       <br /><br />
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
+      
+      <div className="button-container">
+        <Button text="good" handleClick={() => setGood(good + 1)} />
+        <Button text="neutral" handleClick={() => setNeutral(neutral + 1)} />
+        <Button text="bad" handleClick={() => setBad(bad + 1)} />
+      </div>
       <br /><br />
     </div>
     <Statistics good={good} neutral={neutral} bad={bad} />
