@@ -17,5 +17,9 @@ sequenceDiagram
     server-->browser: [{ content: "whatever, just a simple content", date: "2025-01-20" }, ...]
 
     note over browser: browser executes the event handler that renders notes to display
+<<<<<<< HEAD
 ```
 
+=======
+```
+>>>>>>> 7ebddfb (completed till 1.5)

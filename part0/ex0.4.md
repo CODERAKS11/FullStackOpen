@@ -23,5 +23,9 @@ sequenceDiagram
 
         note over browser: browser reloads the page
     end
+<<<<<<< HEAD
 ```
 
+=======
+```
+>>>>>>> 7ebddfb (completed till 1.5)
