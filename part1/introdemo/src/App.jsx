@@ -27,14 +27,39 @@ const App = () => {
   function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  // setVotes(...votes,votes[{selected}]+=1)
+
+  function findIndexOfLargest(votesArray) {
+    let largest = votesArray[0];
+    let indexOfLargest = 0;
+    
+    votesArray.forEach((value, index) => {
+      if (value > largest) {
+        largest = value;
+        indexOfLargest = index;
+      }
+    });
+    
+    return indexOfLargest;
+  }
+  
+  // Assuming you have anecdotes array and votes object
+  const votesArray = Object.values(votes);
+  const indexOfMostVotes = findIndexOfLargest(votesArray);
+  
+  // To display the anecdote with most votes:
+
+
 
   return (
     <div>
+    <h1>Anecdote of the day</h1>
     {anecdotes[selected]} <br />
     <button onClick={() => setVotes({...votes, [selected]: votes[selected] + 1})} >vote</button>
     <button onClick={() => setSelected(getRandomIntInclusive(0,anecdotes.length))}>next anecdote</button><br />
-    
+    <br />
+    <h1>Anecdote with most votes</h1>
+    <p>{anecdotes[indexOfMostVotes]}</p>
+    <p>has {votesArray[indexOfMostVotes]} votes</p>
   </div>
   )
 }
@@ -43,5 +68,4 @@ export default App
 
 
 
-//The code you provided is a React component for a simple feedback application. It sets up the initial state for "good," "neutral," and "bad" feedback using the `useState` hook. However, the component does not yet include the logic to handle button clicks or display the feedback data.
 
