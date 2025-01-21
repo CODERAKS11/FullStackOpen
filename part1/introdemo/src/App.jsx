@@ -28,7 +28,6 @@ const App = () => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-<<<<<<< HEAD
   function findIndexOfLargest(votesArray) {
     let largest = votesArray[0];
     let indexOfLargest = 0;
@@ -48,23 +47,6 @@ const App = () => {
   const indexOfMostVotes = findIndexOfLargest(votesArray);
   
   // To display the anecdote with most votes:
-=======
-const votesArray = Object.values(votes);
-console.log(votesArray)
-function findIndexOfLargest(votesArray) {
-  let largest = 0;
-  let indexOfLargest = 0;
-  
-  votesArray.forEach((index) => {
-    if (votesArray[index] > largest) {
-      largest = votesArray[index];
-      indexOfLargest = index;
-    }
-  });
-  
-  return indexOfLargest;
-}
->>>>>>> c4e26717910fb4e4b55e9289b643535a1972b6d5
 
 
 
@@ -76,14 +58,8 @@ function findIndexOfLargest(votesArray) {
     <button onClick={() => setSelected(getRandomIntInclusive(0,anecdotes.length))}>next anecdote</button><br />
     <br />
     <h1>Anecdote with most votes</h1>
-<<<<<<< HEAD
     <p>{anecdotes[indexOfMostVotes]}</p>
     <p>has {votesArray[indexOfMostVotes]} votes</p>
-=======
-    
-    {anecdotes[findIndexOfLargest(votesArray)]} <br/>has {votes[findIndexOfLargest(votesArray)]} votes
-
->>>>>>> c4e26717910fb4e4b55e9289b643535a1972b6d5
   </div>
   )
 }
