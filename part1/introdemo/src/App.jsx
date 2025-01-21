@@ -6,44 +6,42 @@ import Header  from "./components/Header.jsx"
 import Content from './components/Content.jsx'
 import Total from './components/Total.jsx'
 
+
+
 const App = () => {
-  // const course = 'Half Stack application development'
-  // const part1 = 'Fundamentals of React'
-  // const exercises1 = 10
-  // const part2 = 'Using props to pass data'
-  // const exercises2 = 7
-  // const part3 = 'State of a component'
-  // const exercises3 = 14
-
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
-
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
   return (
     <>
-    <Header course={course.name} />
-     <Content content = {course.parts}/> 
-     <Total total={course.parts} />
-   
-    </>
+      
+
+    <div>
+      <h1>give feedback</h1>
+      <br /><br />
+      <button onClick={() => setGood(good + 1)}>good</button>
+      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
+      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <br /><br />
+    </div>
+    <div>
+      <h1>statistics</h1>
+      
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>    
+      <p>bad {bad}</p>
+      
+    </div>
+    
+  </> 
   )
 }
 
-
 export default App
+
+
+
+//The code you provided is a React component for a simple feedback application. It sets up the initial state for "good," "neutral," and "bad" feedback using the `useState` hook. However, the component does not yet include the logic to handle button clicks or display the feedback data.
 
