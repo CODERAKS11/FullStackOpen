@@ -1,10 +1,8 @@
-function Header  (params) {
-  
+function Header  ({Header}) {
+  console.log({Header})
     return ( 
       <>
-      <h1> Course </h1>
-      <p>{params.course}</p>
-  
+      <h1>{Header}</h1>
       </>
     )
   }
