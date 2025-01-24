@@ -1,14 +1,20 @@
-import Part1 from "./part/part1"
-import Part2 from "./part/part2"
-import Part3 from "./part/part3"
 
+import Part from "./part/Part.jsx"
 const Content = ({parts}) => {
-  
+  // console.log(parts)
+  // console.log(parts[0])
   return (
     <>
-    <Part1 Part1={parts[0]}/>
-    <Part2 Part2={parts[1]}/>
-    <Part3 Part3={parts[2]}/>
+    {
+        parts.map((part)=> {
+        console.log(part)
+        return<div key={part.id}>
+          <Part part={part} />
+        </div> 
+          
+        })
+      }
+    
     </>
   )
 }

@@ -1,9 +1,9 @@
-const Total = (params)=>{
+const Total = ({parts})=>{
   
     return(
       <>
        
-        <p>Number of exercises {params.total[0].exercises + params.total[1].exercises + params.total[2].exercises}</p>
+        <p>total of {parts.reduce((s, p) => s + p.exercises, 0)} exercises</p>
   
       </>
     )
