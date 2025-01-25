@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -41,15 +44,17 @@ const App = () => {
 
   return (
     <div>
-      <div>
-       <h2>Phonebook</h2>
+      <h2>Phonebook</h2>
+      <Filter filterValue={filterValue} setFilterValue={setFilterValue} />
+      {/* <div>
        filter shown with <input type='text' value={filterValue.content} onChange={(e)=>{
         e.preventDefault(),
         setFilterValue(()=>{return {set: true, content: e.target.value}})
        }} />
-      </div>
-      <h2>add a new</h2>
-      <form>
+      </div> */}
+      <h3>add a new</h3>
+      <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} addPersons={addPersons} />
+      {/* <form>
         <div>
           name: <input value={newName} onChange={(e)=>{
             e.preventDefault(),
@@ -65,14 +70,15 @@ const App = () => {
         <div>
           <button type="submit" onClick={addPersons}>add</button>
         </div>
-      </form>
+      </form> */}
       <h2>Numbers</h2>
-      {
+      <Persons filterValue={filterValue} filterResults={filterResults} persons={persons} />
+      {/* {
         filterValue.set ? 
           filterResults.map((person, index) => <p key={index}>{person.name} {person.number}</p>)
          : 
         persons.map((person, index) => <p key={index}>{person.name} {person.number}</p>)
-      }
+      } */}
     </div>
   )
 }
