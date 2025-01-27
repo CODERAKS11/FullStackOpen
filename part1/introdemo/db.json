@@ -19,29 +19,6 @@
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122",
       "id": "4"
-<<<<<<< HEAD
-=======
-    },
-    {
-      "id": "cb6f",
-      "name": "Amar",
-      "number": "123456"
-    },
-    {
-      "id": "b4ba",
-      "name": "Ajit",
-      "number": "98765"
-    },
-    {
-      "id": "54ee",
-      "name": "Divya",
-      "number": "456789"
-    },
-    {
-      "id": "3a8a",
-      "name": "Raj",
-      "number": "87585"
->>>>>>> 2c806fdbbb3ae211361426539636c92064fea338
     }
   ]
 }
