@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import axios from 'axios'
+import phonebook from './services/phonebook'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,11 +14,15 @@ const App = () => {
     content: ''
   })
   useEffect(() => {
-    const response = axios.get('http://localhost:3001/persons')
-    .then((response) => {
-      setPersons(response.data)
+    // const response = axios.get('http://localhost:3001/persons')
+    phonebook
+    .getAll()
+    .then((persons) => {
+      setPersons(persons)
     })
   },[])
+
+
 
   const addPersons = (event) => {
     event.preventDefault()
@@ -31,8 +36,15 @@ const App = () => {
     }
     else{
       setPersons(persons.concat({name: newName, number: newNumber}))
-      
+      phonebook
+      .create({name: newName, number: newNumber})
+      .then(response => console.log(response))
     }  
+    // axios
+    // .post('http://localhost:3001/persons', {name: newName, number: newNumber})
+    // .then(response => console.log(response))
+    
+
     setNewName('')
     setNewNumber('')
   }
@@ -54,7 +66,7 @@ const App = () => {
        }} />
       </div> */}
       <h3>add a new</h3>
-      <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} addPersons={addPersons} />
+      <PersonForm  newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} addPersons={addPersons} />
       {/* <form>
         <div>
           name: <input value={newName} onChange={(e)=>{
@@ -73,7 +85,7 @@ const App = () => {
         </div>
       </form> */}
       <h2>Numbers</h2>
-      <Persons filterValue={filterValue} filterResults={filterResults} persons={persons} />
+      <Persons setPersons={setPersons} filterValue={filterValue} filterResults={filterResults} persons={persons} />
       {/* {
         filterValue.set ? 
           filterResults.map((person, index) => <p key={index}>{person.name} {person.number}</p>)
