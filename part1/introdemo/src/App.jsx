@@ -26,27 +26,35 @@ const App = () => {
 
   const addPersons = (event) => {
     event.preventDefault()
-    const found1 = persons.find((person) => person.name === newName )
-    const found2 = persons.find((person) =>  person.number === newNumber)
-    if(found1) {
-      alert(`${newName} is already added to phonebook`)
-    }
-    else if(found2){
-      alert(`${newNumber} is already added to phonebook`)
-    }
-    else{
-      setPersons(persons.concat({name: newName, number: newNumber}))
+    const existingPerson = persons.find((person) => person.name === newName)
+  
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        phonebook
+          .update(existingPerson.id, { name: newName, number: newNumber })
+          .then(response => {
+            setPersons(persons.map(person => 
+              person.id !== existingPerson.id ? person : { ...response }
+            ))
+          })
+          .catch(error => {
+            console.error('Error updating person:', error)
+            alert(`Failed to update ${newName}'s number`)
+          })
+      }
+    } else {
       phonebook
-      .create({name: newName, number: newNumber})
-      .then(response => console.log(response))
-    }  
-    // axios
-    // .post('http://localhost:3001/persons', {name: newName, number: newNumber})
-    // .then(response => console.log(response))
-    
-
-    setNewName('')
-    setNewNumber('')
+        .create({ name: newName, number: newNumber })
+        .then(response => {
+          setPersons(persons.concat(response))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          console.error('Error creating person:', error)
+          alert(`Failed to add ${newName}`)
+        })
+    }
   }
   const filterResults = 
      persons.filter((person) => person.name.toLowerCase().includes(filterValue.content.toLowerCase()))
