@@ -123,8 +123,4 @@ console.log(selectedCountryWeatherData)
   );
 }
 
-<<<<<<< HEAD
 export default App;
-=======
-export default App;
->>>>>>> cb79b4f9d2aa0b0e591dc56561e8f87b43770e72
