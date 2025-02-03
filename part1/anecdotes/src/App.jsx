@@ -1,14 +1,4 @@
-import { Component, useState } from 'react'
-
-// import viteLogo from '/vite.svg'
-
-// import Header  from "./components/Header.jsx"
-// import Content from './components/Content.jsx'
-// import Total from './components/Total.jsx'
-// import Statistics from './components/Statistics.jsx'
-// import Button from './components/Button.jsx'
-
-
+import { useState } from 'react';
 
 const App = () => {
   const anecdotes = [
@@ -18,54 +8,50 @@ const App = () => {
     'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
-    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'Programming without an extremely heavy use of console.log is the same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
-  ]
-   
-  const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState({0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0})
-  function getRandomIntInclusive(min, max) {
+  ];
+
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+
+  const getRandomIntInclusive = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  };
 
-  function findIndexOfLargest(votesArray) {
-    let largest = votesArray[0];
-    let indexOfLargest = 0;
-    
-    votesArray.forEach((value, index) => {
-      if (value > largest) {
-        largest = value;
-        indexOfLargest = index;
-      }
-    });
-    
-    return indexOfLargest;
-  }
-  
-  // Assuming you have anecdotes array and votes object
-  const votesArray = Object.values(votes);
-  const indexOfMostVotes = findIndexOfLargest(votesArray);
-  
-  // To display the anecdote with most votes:
-
-
+  const handleVote = () => {
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+  };
+  //const mostVotedIndex = votes.indexOf(Math.max(...votes));
+  // Finding the index of the anecdote with the most votes using reduce
+  const mostVotedIndex = votes.reduce(
+    (maxIndex, currentVotes, index, array) =>
+      currentVotes > array[maxIndex] ? index : maxIndex,
+    0
+  );
 
   return (
     <div>
-    <h1>Anecdote of the day</h1>
-    {anecdotes[selected]} <br />
-    <button onClick={() => setVotes({...votes, [selected]: votes[selected] + 1})} >vote</button>
-    <button onClick={() => setSelected(getRandomIntInclusive(0,anecdotes.length))}>next anecdote</button><br />
-    <br />
-    <h1>Anecdote with most votes</h1>
-    <p>{anecdotes[indexOfMostVotes]}</p>
-    <p>has {votesArray[indexOfMostVotes]} votes</p>
-  </div>
-  )
-}
+      <h1>Anecdote of the day</h1>
+      <p>{anecdotes[selected]}</p>
+      <p>Has {votes[selected]} votes</p>
+      <button onClick={handleVote}>Vote</button>
+      <button onClick={() => setSelected(getRandomIntInclusive(0, anecdotes.length - 1))}>
+        Next Anecdote
+      </button>
+      <h1>Anecdote with most votes</h1>
+      {votes[mostVotedIndex] > 0 ? (
+        <>
+          <p>{anecdotes[mostVotedIndex]}</p>
+          <p>Has {votes[mostVotedIndex]} votes</p>
+        </>
+      ) : (
+        <p>No votes yet.</p>
+      )}
+    </div>
+  );
+};
 
-export default App
-
-
-
-
+export default App;

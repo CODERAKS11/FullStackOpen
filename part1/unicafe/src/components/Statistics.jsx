@@ -9,10 +9,6 @@ const Statistics = ({ good, neutral, bad }) => {
       ) : (
         <div>
       <h1>statistics</h1>
-      
-      {/* <p>good {good}</p>
-      <p>neutral {neutral}</p>    
-      <p>bad {bad}</p> */}
       <table>
         <tr>
         <StatisticLine text="good" value ={good} /><br />
@@ -36,12 +32,6 @@ const Statistics = ({ good, neutral, bad }) => {
             <td>{(good / (good + neutral + bad)) * 100} %</td>
         </tr>
       </table>
-      {/* <StatisticLine text="good" value ={good} /><br />
-      <StatisticLine text="neutral" value ={neutral} /><br />
-      <StatisticLine text="bad" value ={bad} /> */}
-      {/* <p>all {good + neutral + bad}</p>
-      <p>average {(good - bad) / (good + neutral + bad)}</p>
-      <p>positive {(good / (good + neutral + bad)) * 100} %</p> */}
       </div>)}
       
     </div>
