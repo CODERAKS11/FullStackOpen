@@ -1,7 +1,13 @@
 const express = require('express')
 const morgan = require('morgan')
+const dotenv = require('dotenv')
 const app = express()
+app.use(express.static('dist'))
 app.use(express.json())
+dotenv.config({
+    path: './.env'
+  
+})
 // app.use(morgan('tiny'))
 morgan.token("body",(req)=>{
     return req.method === "POST" ? JSON.stringify(req.body) : " "
@@ -103,7 +109,7 @@ app.post('/api/persons',(req,res)=>{
      
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT,()=>{
     console.log(`App running on port ${PORT}`)
 })
