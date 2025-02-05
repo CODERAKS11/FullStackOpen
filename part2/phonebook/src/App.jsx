@@ -103,11 +103,7 @@ const App = () => {
   }
   const filterResults = 
      persons.filter((person) => person.name.toLowerCase().includes(filterValue.content.toLowerCase()))
-  
-
-
- 
-
+     
   return (
     <div>
       <h2>Phonebook</h2>
