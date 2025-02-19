@@ -109,6 +109,12 @@ app.post('/api/persons',(req,res)=>{
      
 })
 
+app.put('/api/persons/:id',(req,res)=>{
+    const id = req.params.id
+    const body = req.body
+    const person = persons.find(person => person.id === id)
+})
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT,()=>{
     console.log(`App running on port ${PORT}`)
