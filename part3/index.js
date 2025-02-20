@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 const app = express()
 app.use(express.static('dist'))
 app.use(express.json())
+
 app.use(cors())
 const Person = require('./models/person')
 const e = require('express')
@@ -54,26 +55,34 @@ app.get('/api/persons',(request,response)=>{
     })
 })
 
-app.get("/info", (req, res) => {
+app.get("/info",async (req, res) => {
     const now = new Date();
     const formattedDate = now.toString(); // Example: "Sat Jan 22 2022 22:27:20 GMT+0200 (Eastern European Standard Time)"
-    const personsLength=persons.length
-    console.log(personsLength)
+    const personsLength= await Person.countDocuments({})
+    .then(count => {
+      console.log("Total Persons:", count);
+      return count
+    })
+    .catch(error => {
+      console.error("Error counting documents:", error);
+    });
+    
     res.send(`<p>
             Phonebook has info for ${personsLength} people <br />
             ${formattedDate}
         </p>`);
 });
 
-app.get('/api/persons/:id',(request,response)=>{
+app.get('/api/persons/:id',(request,response,next)=>{
     Person.findById(request.params.id).then(person => {
         response.json(person)
       }).catch(error=>{
-        response.status(404).json({error: `person with ${request.params.id} not found`})
+        // response.status(404).json({error: `person with ${request.params.id} not found`})
+        next(error)
       })
 })
 
-app.delete('/api/persons/:id',(req,res)=>{
+app.delete('/api/persons/:id',(req,res,next)=>{
     const id = req.params.id
     Person.findByIdAndDelete(id).then((person) =>{
         if(!person){
@@ -82,12 +91,13 @@ app.delete('/api/persons/:id',(req,res)=>{
         console.log(`Person with id ${id} deleted`)
         res.status(204).end()
       }).catch(error=>{
-        console.error("Delete Error:",error)
-        res.status(500).json({error: `person with ${id} not deleted`})
+        // console.error("Delete Error:",error)
+        // res.status(500).json({error: `person with ${id} not deleted`})
+        next(error)
     })
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const { name, number } = req.body;
 
     if (!name) {
@@ -96,7 +106,7 @@ app.post('/api/persons', (req, res) => {
     if (!number) {
         return res.status(400).json({ error: "Number is missing" });
     }
-    
+
     Person.findOne({ name })
         .then(existingPerson => {
             if (existingPerson) {
@@ -111,17 +121,18 @@ app.post('/api/persons', (req, res) => {
             }
         })
         .catch(error => {
-            console.error("Error:", error);
-            if (!res.headersSent) { // Prevent double response
-                res.status(500).json({ error: "Internal Server Error" });
-            }
+            // console.error("Error:", error);
+            // if (!res.headersSent) { // Prevent double response
+            //     res.status(500).json({ error: "Internal Server Error" });
+            // }
+            next(error)
         });
 });
 
 
 
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     const { name, number } = req.body;
 
@@ -141,11 +152,24 @@ app.put('/api/persons/:id', (req, res) => {
         res.status(200).json(updatedPerson);
     })
     .catch(error => {
-        console.error("Update error:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        // console.error("Update error:", error);
+        // res.status(500).json({ error: "Internal Server Error" });
+        next(error)
     });
 });
 
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+  
+  // this has to be the last loaded middleware, also all the routes should be registered before this!
+  app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT,()=>{
