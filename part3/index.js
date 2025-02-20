@@ -1,9 +1,13 @@
 const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan')
 const dotenv = require('dotenv')
 const app = express()
 app.use(express.static('dist'))
 app.use(express.json())
+app.use(cors())
+const Person = require('./models/person')
+const e = require('express')
 dotenv.config({
     path: './.env'
   
@@ -45,7 +49,9 @@ const findExistingName = (newName)=>{
 }
 
 app.get('/api/persons',(request,response)=>{
-    response.json(persons)
+    Person.find({}).then((persons) =>{
+        response.json(persons)
+    })
 })
 
 app.get("/info", (req, res) => {
@@ -60,60 +66,86 @@ app.get("/info", (req, res) => {
 });
 
 app.get('/api/persons/:id',(request,response)=>{
-    const id = request.params.id;
-    const person = persons.find(person => person.id === id)
-    if(person){
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-    }else{
-        response.status(404).json({error:"id not found"}).end()
-    }
+      }).catch(error=>{
+        response.status(404).json({error: `person with ${request.params.id} not found`})
+      })
 })
 
 app.delete('/api/persons/:id',(req,res)=>{
     const id = req.params.id
-    persons = persons.filter(person=>person.id !== id)
-    res.status(204).end()
+    Person.findByIdAndDelete(id).then((person) =>{
+        if(!person){
+            return res.status(404).json({error: `person with ${id} not found`})
+        }
+        console.log(`Person with id ${id} deleted`)
+        res.status(204).end()
+      }).catch(error=>{
+        console.error("Delete Error:",error)
+        res.status(500).json({error: `person with ${id} not deleted`})
+    })
 })
 
-app.post('/api/persons',(req,res)=>{
-    const body = req.body
+app.post('/api/persons', (req, res) => {
+    const { name, number } = req.body;
 
-    if(!body.name ){
-        return res.status(400).json({
-            error:"name is missing"
-        })
+    if (!name) {
+        return res.status(400).json({ error: "Name is missing" });
     }
-    else if(!body.number){
-        return res.status(400).json(
-            {
-                error : "number is missing"
+    if (!number) {
+        return res.status(400).json({ error: "Number is missing" });
+    }
+    
+    Person.findOne({ name })
+        .then(existingPerson => {
+            if (existingPerson) {
+                return res.status(409).json({ error: "Person already exists" });
             }
-        )
-    }
-
-    const existingName = findExistingName(body.name)
-    if(existingName){
-        return res.status(400).json({
-            error: "name must be unique"
+            const person = new Person({ name, number });
+            return person.save();
         })
+        .then(savedPerson => {
+            if (savedPerson) {
+                res.status(201).json(savedPerson);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            if (!res.headersSent) { // Prevent double response
+                res.status(500).json({ error: "Internal Server Error" });
+            }
+        });
+});
+
+
+
+
+app.put('/api/persons/:id', (req, res) => {
+    const id = req.params.id;
+    const { name, number } = req.body;
+
+    if (!name || !number) {
+        return res.status(400).json({ error: "Name and number are required" });
     }
 
-    const person={
-        id:getRandomId(10000),
-        name:body.name,
-        number:body.number,
-        
-    }
-    persons = persons.concat(person)
-    res.json(person)
-     
-})
+    Person.findByIdAndUpdate(
+        id,
+        { name, number },
+        { new: true, runValidators: true }
+    )
+    .then(updatedPerson => {
+        if (!updatedPerson) {
+            return res.status(404).json({ error: "Person not found" });
+        }
+        res.status(200).json(updatedPerson);
+    })
+    .catch(error => {
+        console.error("Update error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    });
+});
 
-app.put('/api/persons/:id',(req,res)=>{
-    const id = req.params.id
-    const body = req.body
-    const person = persons.find(person => person.id === id)
-})
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT,()=>{
