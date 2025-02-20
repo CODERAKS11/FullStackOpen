@@ -14,29 +14,29 @@ console.log('connecting to', url)
 mongoose.connect(url)
 
   .then(result => {
-    console.log('connected to MongoDB')
+    console.log('connected to MongoDB',result)
   })
   .catch(error => {
     console.log('error connecting to MongoDB:', error.message)
   })
 
 const personSchema = new mongoose.Schema({
-  name: { 
-      type: String, 
-      required: [true, "Name is required"], 
-      minlength: [3, "Name must be at least 3 characters long"]
+  name: {
+    type: String,
+    required: [true, 'Name is required'],
+    minlength: [3, 'Name must be at least 3 characters long']
   },
-  number: { 
-      type: String, 
-      required: [true, "Number is required"], 
-      validate: {
-          validator: function(value) {
-              return /^\d{2,3}-\d{5,}$/.test(value); 
-          },
-          message: props => `${props.value} is not a valid phone number! Format should be XX-XXXXX or XXX-XXXXX`
-      }
+  number: {
+    type: String,
+    required: [true, 'Number is required'],
+    validate: {
+      validator: function(value) {
+        return /^\d{2,3}-\d{5,}$/.test(value)
+      },
+      message: props => `${props.value} is not a valid phone number! Format should be XX-XXXXX or XXX-XXXXX`
+    }
   }
-});
+})
 
 
 personSchema.set('toJSON', {
