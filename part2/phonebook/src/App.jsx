@@ -38,69 +38,50 @@ const App = () => {
 
 
   const addPersons = (event) => {
-    event.preventDefault()
-    const existingPerson = persons.find((person) => person.name === newName)
-  
+    event.preventDefault();
+    const existingPerson = persons.find((person) => person.name === newName);
+
     if (existingPerson) {
-      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        phonebook
-          .update(existingPerson.id, { name: newName, number: newNumber })
-          .then(response => {
-            setPersons(persons.map(person => 
-              person.id !== existingPerson.id ? person : { ...response }
-            ))
-            setErrorMessage(
-              `Successfully updated ${existingPerson.name} `
-            )
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
-          })
-          .catch(error => {
-            console.log('Error updating person:', error)
-            if( error.response.data === "Not Found"){
-              setErrorMessage(`Information of ${existingPerson.name} has already been removed from server`)
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-            }else{
-              setErrorMessage(
-                `Failed to update ${existingPerson.name} `
-              )
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-            }})
-            
-            
-      }
+        if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+            phonebook
+                .update(existingPerson.id, { name: newName, number: newNumber })
+                .then(response => {
+                    setPersons(persons.map(person =>
+                        person.id !== existingPerson.id ? person : { ...response }
+                    ));
+                    setErrorMessage(`Successfully updated ${existingPerson.name}`);
+                    setTimeout(() => setErrorMessage(null), 5000);
+                })
+                .catch(error => {
+                    if (error.response && error.response.data.error) {
+                        setErrorMessage(error.response.data.error); // Show validation error
+                    } else {
+                        setErrorMessage(`Failed to update ${existingPerson.name}`);
+                    }
+                    setTimeout(() => setErrorMessage(null), 5000);
+                });
+        }
     } else {
-      phonebook
-        .create({ name: newName, number: newNumber })
-        .then(response => {
-          setPersons(persons.concat(response))
-          setNewName('')
-          setNewNumber('')
-          setErrorMessage(
-            `Successfully added  ${response.name} to the phonebook`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-          
-        })
-        .catch(error => {
-          console.error('Error creating person:', error)
-          
-          setErrorMessage(
-            `Failed to add ${newName}`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-        })
+        phonebook
+            .create({ name: newName, number: newNumber })
+            .then(response => {
+                setPersons(persons.concat(response));
+                setNewName('');
+                setNewNumber('');
+                setErrorMessage(`Successfully added ${response.name} to the phonebook`);
+                setTimeout(() => setErrorMessage(null), 5000);
+            })
+            .catch(error => {
+                if (error.response && error.response.data.error) {
+                    setErrorMessage(error.response.data.error); // Show validation error
+                } else {
+                    setErrorMessage(`Failed to add ${newName}`);
+                }
+                setTimeout(() => setErrorMessage(null), 5000);
+            });
     }
-  }
+};
+
   const filterResults = 
      persons.filter((person) => person.name.toLowerCase().includes(filterValue.content.toLowerCase()))
      
