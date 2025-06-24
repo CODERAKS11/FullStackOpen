@@ -6,16 +6,17 @@ blogsRouter.get('/', async (request, response) => {
     'user',
     {username: 1, name: 1}
   )
+  response.json(blogs)
 
 })
 
-
 blogsRouter.post('/', async (request, response) => {
- const body = request.body
+  const body = request.body
   // Validate if exist title or url
   if (!body.title || !body.url){
     response.status(400).end()
   }
+
   if (!request.user) {
     return response.status(401).json({ error: 'token invalid'})
   }
@@ -28,9 +29,11 @@ blogsRouter.post('/', async (request, response) => {
     likes: body.likes,
     user: user.id
   })
+
   const savedBlog = await blog.save()
-   user.blogs = user.blogs.concat(savedBlog.id)
+  user.blogs = user.blogs.concat(savedBlog.id)
   await user.save()
+
   response.status(201).json(savedBlog)
 })
 
@@ -63,6 +66,5 @@ blogsRouter.put('/:id', async (request, response) => {
     response.status(401).json({ error: 'This user cannot modify this blog'})
   }
 })
-
 
 module.exports = blogsRouter

@@ -6,9 +6,11 @@ const app = require('../index')
 const Blog = require('../models/blog')
 const testHelper = require('./test_helper')
 const listHelper = require('../utils/list_helper')
-const api = supertest(app)
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+
+const api = supertest(app)
+
 describe('When there is initially some blogs saved', () => {
   beforeEach(async () => {
     await User.deleteMany({})
@@ -22,6 +24,7 @@ describe('When there is initially some blogs saved', () => {
 
     const users = await testHelper.usersInDb()
     const root = users.find(user => user.username === 'root')
+    
     await Blog.deleteMany({})
     
     for (let blog of testHelper.listBlogs){
@@ -29,23 +32,9 @@ describe('When there is initially some blogs saved', () => {
       blogObject.user = root.id
       await blogObject.save()
     }
-  
   })
 
   describe('Get a specific blog', () => {
-    test('When add blog with incorrect login return 401', async() => {
-      const newBlog = { 
-        title: 'nwe blogs uperduper',
-        author: 'ejemplo',
-        url: 'https://homepages.cwi.nl/',
-        likes: 2
-      }
-      await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(401)
-        .expect('Content-Type', /application\/json/)
-    })
     test('blogs are returned as json', async() => {
       await api
       .get('/api/blogs')
@@ -70,6 +59,20 @@ describe('When there is initially some blogs saved', () => {
   })
 
   describe('Add a specific blog', () => {
+    test('When add blog with incorrect login return 401', async() => {
+      const newBlog = { 
+        title: 'nwe blogs uperduper',
+        author: 'ejemplo',
+        url: 'https://homepages.cwi.nl/',
+        likes: 2
+      }
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+    })
+
     test('Added a new blog', async () => {
       const loginResponse = await api
         .post('/api/login')
@@ -77,6 +80,7 @@ describe('When there is initially some blogs saved', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
       const token = loginResponse.body.token
+
       const newBlog = { 
         title: 'nwe blogs uperduper',
         author: loginResponse.body.name,
@@ -105,6 +109,7 @@ describe('When there is initially some blogs saved', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
       const token = loginResponse.body.token
+
       const newBlogWithoutLikes = {
         title: 'ROS For all',
         author: 'Nicolas Norambuena',
@@ -146,10 +151,7 @@ describe('When there is initially some blogs saved', () => {
     })
   })
 
-
-})
-
-describe('delete a specific blog', () => {
+  describe('delete a specific blog', () => {
     test('deleted a specific blog by id', async () => {
       const loginResponse = await api
         .post('/api/login')
@@ -157,6 +159,7 @@ describe('delete a specific blog', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
       const token = loginResponse.body.token
+
       const blogToDelete = 'React patterns'
       const blogsSaved = await api.get('/api/blogs')
       const idBlogToDelete = listHelper.searchIdByTitle(blogsSaved.body, blogToDelete)
@@ -171,7 +174,7 @@ describe('delete a specific blog', () => {
 
   describe('Modify a specific blog', () => {
     test('Modify a specific blog by id', async () => {
-      const blogToModify = 'ROS For all'
+      const blogToModify = 'React patterns'
       const bodyModify =  {
         title: "React patterns",
         author: "Arturo chan",
@@ -179,14 +182,15 @@ describe('delete a specific blog', () => {
         likes: 10,
       }
       const blogsSaved = await api.get('/api/blogs')
-      console.log(blogsSaved.body)
       const blogId = listHelper.searchIdByTitle(blogsSaved.body, blogToModify)
+      // Get token
       const loginResponse = await api
         .post('/api/login')
         .send({ username: 'root', password: 'root' })
         .expect(200)
         .expect('Content-Type', /application\/json/)
       const token = loginResponse.body.token
+
       await api
         .put(`/api/blogs/${blogId}`)
         .set('Authorization', `Bearer ${token}`)
@@ -203,6 +207,7 @@ describe('delete a specific blog', () => {
     })
   })
 
+})
 
 after(async () => {
   await mongoose.connection.close()

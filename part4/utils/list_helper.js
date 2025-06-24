@@ -1,78 +1,61 @@
+var _ = require('lodash');
+
 const dummy = (blogs) => {
-  const blogData = blogs;
-  return 1;
-};
+  return 1
+}
 
 const totalLikes = (blogs) => {
-  return blogs.reduce((sum, blog) => sum + (blog.likes || 0), 0)
+  const total = blogs.reduce((accumulator, current) => accumulator + current.likes, 0)
+  return blogs.length === 0 ? 0 : total
 }
 
 const favoriteBlog = (blogs) => {
-  if (blogs.length === 0) return null
-
-  return blogs.reduce((fav, blog) => blog.likes > fav.likes ? blog : fav)
+  const blogMaxLikes = blogs.reduce((maxValue, current) => current.likes >= maxValue.likes ? current : maxValue)
+  delete blogMaxLikes.id
+  delete blogMaxLikes.url
+  return blogMaxLikes
 }
 
 const mostBlogs = (blogs) => {
-  if (blogs.length === 0) return null
+  const groupAuthor =  _.map(
+    _.groupBy(blogs, 'author'), 
+    (elements => ({
+      author: elements[0].author, 
+      blogs: elements.length
+    }))
+  )
+  const maxBlogsAuthor = _.maxBy(
+    groupAuthor, 
+    (element => {
+    return element.blogs
+    })
+  )
 
-  const authorCounts = {}
-
-  for (const blog of blogs) {
-    authorCounts[blog.author] = (authorCounts[blog.author] || 0) + 1
-  }
-
-  let topAuthor = null
-  let maxBlogs = 0
-
-  for (const author in authorCounts) {
-    if (authorCounts[author] > maxBlogs) {
-      topAuthor = author
-      maxBlogs = authorCounts[author]
-    }
-  }
-
-  return {
-    author: topAuthor,
-    blogs: maxBlogs
-  }
+  return maxBlogsAuthor
 }
 
 const mostLikes = (blogs) => {
-  if (blogs.length === 0) return null
+  const groupAuthor =  _.map(
+    _.groupBy(blogs, 'author'), 
+    (elements => ({
+      author: elements[0].author, 
+      likes: totalLikes(elements)
+    }))
+  )
+  const maxLikesAuthor = _.maxBy(groupAuthor, (element => {
+    return element.likes
+  }))
 
-  const authorLikes = {}
-
-  for (const blog of blogs) {
-    authorLikes[blog.author] = (authorLikes[blog.author] || 0) + (blog.likes || 0)
-  }
-
-  let topAuthor = null
-  let maxLikes = 0
-
-  for (const author in authorLikes) {
-    if (authorLikes[author] > maxLikes) {
-      topAuthor = author
-      maxLikes = authorLikes[author]
-    }
-  }
-
-  return {
-    author: topAuthor,
-    likes: maxLikes
-  }
+  return maxLikesAuthor
 }
 
 const searchIdByTitle = (blogs, title) => {
   const findBlog = blogs.find((blog) => blog.title === title)
-  if (!findBlog) {
-    throw new Error(`Blog with title "${title}" not found`)
+  if (!findBlog.id){
+    return -1
   }
   return findBlog.id
-}
-
-
-
+} 
 module.exports = {
   dummy,
   totalLikes,

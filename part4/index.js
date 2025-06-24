@@ -1,26 +1,24 @@
+require('dotenv').config()
 const express = require('express')
-const mongoose = require('mongoose')
-const config = require('./utils/config')
+require('express-async-errors')
 const app = express()
-const Blog = require('./models/blog')
-const logger = require('./utils/logger')
-const mongoUrl = `${config.MONGODB_URI}`
-const blogsRouter = require('./routes/blogs')
-// app.use('/api/blogs', blogsRouter)
-mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.error('error connection to MongoDB:', error.message)
-  })
+const cors = require('cors')
+const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
+const PORT = require('./utils/config').PORT
+const middleware = require('./utils/middleware')
 
+app.use(cors())
 app.use(express.json())
-
+app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
-const PORT = config.PORT;
+app.use(middleware.errorHandler)
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

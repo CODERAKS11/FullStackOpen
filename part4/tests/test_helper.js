@@ -4,6 +4,7 @@ const usersInDb = async () => {
   const users = await User.find({})
   return users.map(u => u.toJSON())
 }
+
 const oneBlog = [
   {
     id: '5a422aa71b54a676234d17f8',
@@ -58,6 +59,7 @@ const listBlogs = [
     likes: 2,
   }  
 ]
+
 
 module.exports = {
   listBlogs,
