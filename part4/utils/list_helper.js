@@ -63,6 +63,14 @@ const mostLikes = (blogs) => {
   }
 }
 
+const searchIdByTitle = (blogs, title) => {
+  const findBlog = blogs.find((blog) => blog.title === title)
+  if (!findBlog) {
+    throw new Error(`Blog with title "${title}" not found`)
+  }
+  return findBlog.id
+}
+
 
 
 module.exports = {
@@ -70,5 +78,6 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  mostLikes
+  mostLikes,
+  searchIdByTitle
 }

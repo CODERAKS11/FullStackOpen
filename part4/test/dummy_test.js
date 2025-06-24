@@ -1,6 +1,10 @@
-const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
+const { test, describe } = require('node:test')
+const testHelper = require('./test_helper')
+
+const listWithOneBlog = testHelper.oneBlog
+const listWithMultipleBlogs = testHelper.listBlogs
 
 test('dummy returns one', async () => {
   const response = await fetch('http://localhost:3003/api/blogs');
@@ -199,6 +203,13 @@ describe('most likes', () => {
 
     const result = listHelper.mostLikes(blogs)
     assert.deepStrictEqual(result, expected)
+  })
+})
+
+describe('Search id by title', () => {
+  test('When blog exist', () =>{
+    const result = listHelper.searchIdByTitle(listWithMultipleBlogs, listWithMultipleBlogs[0].title)
+    assert.strictEqual(result, listWithMultipleBlogs[0].id)
   })
 })
 
