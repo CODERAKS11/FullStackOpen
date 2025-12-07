@@ -1,0 +1,25 @@
+import {createSlice} from '@reduxjs/toolkit'
+const initialState = {
+  good: 0,
+  ok: 0,
+  bad: 0
+}
+
+const counterSlice = createSlice ( {
+  name : "counter",
+  initialState : initialState,
+  reducers : {
+     good: (state) => {
+      state.good += 1;  
+    },
+    ok : (state) => {
+      state.ok += 1;  
+    },
+    bad : (state) => {
+      state.bad += 1;  
+    },
+    reset : () => initialState
+  }
+})
+export const {good,ok,bad,reset} = counterSlice.actions;
+export default counterSlice.reducer
