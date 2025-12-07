@@ -52,7 +52,12 @@ export const appendAnecdotes = (content) => {
   }
 }
 
-
+export const votesUpdater = (id) => {
+  return async (dispatch) => {
+    await anecdoteService.updateVote(id);
+    dispatch(increaseVote(id))
+  }
+}
 
 export const { increaseVote, addAnecdote } = anecdoteSlice.actions;
 export default anecdoteSlice.reducer;
