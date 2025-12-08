@@ -1,7 +1,8 @@
 import React from "react"
 import { useSelector } from "react-redux"
 const NotificationBar = () => {
-  const notification = useSelector(state => state.notification)
+  // const notification = useSelector(state => state.notification)
+  const notification = "Welcome to redux-anecdotes"
   const style = {
     border: 'solid',
     padding: 10,

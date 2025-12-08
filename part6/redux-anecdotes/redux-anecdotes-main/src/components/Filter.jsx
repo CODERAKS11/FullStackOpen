@@ -5,13 +5,14 @@ const Filter = () => {
   const style = {
     marginBottom: 10
   }
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const handleChange = () => {
-    return dispatch(setFilter(event.target.value));
+    // return dispatch(setFilter(event.target.value));
   }
   return (
     <div style={style}>
-      filter <input onChange={handleChange} />
+      {/* filter <input onChange={handleChange} /> */}
+      filter <input />
     </div>
   )
 }
