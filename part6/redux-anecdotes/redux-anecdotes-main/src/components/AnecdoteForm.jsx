@@ -13,6 +13,13 @@ const AnecdoteForm = ({newAnecdoteMutation}) => {
         // const newAnecdote = await anecdoteService.createNew(content)
         // dispatch(addAnecdote(newAnecdote));
         // dispatch(appendAnecdotes(content));
+        if (content.length < 5) {
+          notificationDispatch({type:"SET",payload : "Anecdote must be at least 5 characters long"})
+          setTimeout(() => {
+            notificationDispatch({ type: "CLEAR" })
+          }, 5000)
+          return
+        }
         newAnecdoteMutation.mutate({content, votes : 0})
         notificationDispatch({type:"SET",payload : "anecdote '" + content + "' added"})
         setTimeout(() => {
