@@ -1,6 +1,8 @@
+import React, { useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { increaseVote, addAnecdote, votesUpdater } from '../reducers/anecdoteSlice';
 import { setNotification, clearNotification, setNotificationFunction } from '../reducers/notificationSilce';
+import NotificationContext from '../context/NotificationContext';
 
 const AnecdoteList = ({updateAnecdoteMutation, anecdotes}) => {
     // const dispatch = useDispatch();
@@ -10,11 +12,15 @@ const AnecdoteList = ({updateAnecdoteMutation, anecdotes}) => {
     //     .filter(a => a.content.toLowerCase().includes(filter))
     //     .sort((a, b) => b.votes - a.votes)
     // }); 
+    const {notificationDispatch} = useContext(NotificationContext)
     const vote = anecdote => {
         // dispatch(votesUpdater(anecdote.id))
         // dispatch(setNotificationFunction(anecdote.content, 10))
         updateAnecdoteMutation.mutate({...anecdote, votes : anecdote.votes + 1})
-        
+        notificationDispatch({type : "SET", payload : "anecdote '" + anecdote.content + "' voted"})
+        setTimeout(()=>{
+          notificationDispatch({type : "CLEAR"})
+        },5000)
     };
   
   return (
